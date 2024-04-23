@@ -228,7 +228,12 @@ const configManualChunk = (conf, id: string) => {
 
 function _configManualChunk_vendors(conf, id: string) {
   const matchItem = conf.cabloyManualChunk.vendors.find(item => {
-    return item.match.some(item => id.indexOf(`/${item}/`) > -1);
+    return item.match.some(item => {
+      if (typeof item === 'string') {
+        return id.indexOf(`/${item}/`) > -1;
+      }
+      return item.test(id);
+    });
   });
   if (matchItem) return matchItem.output;
   return null;
