@@ -1,0 +1,59 @@
+<%
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getPascalFromSnake(input){
+  return input.split("-").map(capitalizeFirstLetter).join("")
+}
+
+function getCamelFromSnake(input){
+  const toReturn = getPascalFromSnake(input);
+  return toReturn.charAt(0).toLowerCase() + toReturn.slice(1);
+}
+%>
+<%
+const modulesMonkey=[];
+const modulesSync=[];
+const modulesAsync={};
+%>
+<% for (const relativeName in modules) {
+    const module=modules[relativeName];
+    if(module.info.monkey || module.info.sync){
+       const importName=getCamelFromSnake(relativeName);
+       const importClause=`import * as ${importName} from '${module.info.fullName}';`;
+       if(module.info.monkey){
+        modulesMonkey.push({importName, instance: importName, info: module.info});
+       }else{
+        modulesSync.push({importName, instance: importName, info: module.info});
+       }
+       %><%=importClause%><%
+    }
+}%>
+const modulesMonkey = {};
+const modulesSync = {};
+const modulesAsync = {};
+<% for (const module of modulesMonkey) {
+  const importClause=`modulesMonkey['${module.info.relativeName}'] = {resource: ${module.importName}, info: ${JSON.stringify(module.info,null,2)}};`;
+  %><%=importClause%><%
+}%>
+<% for (const module of modulesSync) {
+  const importClause=`modulesSync['${module.info.relativeName}'] = {resource: ${module.importName}, info: ${JSON.stringify(module.info,null,2)}};`;
+  %><%=importClause%><%
+}%>
+<% for (const relativeName in modules) {
+    const module=modules[relativeName];
+    if(!module.info.monkey && !module.info.sync){
+       const importName=getCamelFromSnake(relativeName);
+       const importClause=`modulesAsync['${module.info.relativeName}'] = {resource: () => import('${module.info.fullName}'), info: ${JSON.stringify(module.info,null,2)}};`;
+       %><%=importClause%><%
+    }
+}%>
+<%
+const clause=`const modules = Object.assign({}, modulesMonkey, modulesSync, modulesAsync);`;
+%>
+<%=clause%>
+<%
+const clause2=`export const modulesMeta = { modules, monkey: modulesMonkey, sync: modulesSync, async: modulesAsync };`;
+%>
+<%=clause2%>

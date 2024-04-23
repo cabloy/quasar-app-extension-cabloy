@@ -1,0 +1,43 @@
+{
+  "name": "quasar-app-extension-cabloy",
+  "version": "1.0.0",
+  "description": "Quasar ext of cabloy",
+  "author": "zhennann",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": [
+        "./src/index.ts",
+        "./dist/index.d.ts"
+      ],
+      "import": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "devDependencies": {
+    "@cabloy/lint": "^4.0.4"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-decorators": "^7.24.0",
+    "@babel/plugin-transform-class-properties": "^7.24.1",
+    "@cabloy/module-glob": "^5.0.4",
+    "@cabloy/extend": "^3.0.5",
+    "@cabloy/vite-plugin-babel": "^1.1.3",
+    "babel-plugin-cabloy-front-bean-module": "^1.0.1",
+    "babel-plugin-transform-typescript-metadata": "^0.3.2",
+    "chalk": "^3.0.0",
+    "esbuild": "^0.20.1",
+    "fs-extra": "^11.1.0",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
+    "tmp": "^0.2.3",
+    "vite-plugin-checker": "^0.6.4"
+  }
+}
