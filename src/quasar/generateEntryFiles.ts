@@ -9,7 +9,8 @@ import { extend } from '@cabloy/extend';
 
 import { pathToFileURL } from 'node:url';
 import * as Path from 'node:path';
-import { getFlavor } from './getFlavor.js';
+import { getEnvMeta } from './utils.js';
+import { getEnvFiles } from '@cabloy/dotenv';
 
 export async function generateEntryFiles(api, { quasarConf }) {
   // config
@@ -20,38 +21,30 @@ export async function generateEntryFiles(api, { quasarConf }) {
 
 async function generateConfig(api, { quasarConf }) {
   const appPaths = api.ctx.appPaths;
-  // flavor
-  const flavor = getFlavor();
-  // entry
-  const entryDefault = appPaths.resolve.src('front/config/config/config.ts');
-  const entryFlavor = appPaths.resolve.src(`front/config/config/config.${flavor}.ts`);
-  if (!fse.existsSync(entryDefault)) {
+  // check config
+  let configDir = appPaths.resolve.src('front/config');
+  if (!fse.existsSync(configDir)) {
     console.log(chalk.red('Please copy directory: from _config to config\n'));
     process.exit(0);
   }
-  if (!fse.existsSync(entryFlavor)) {
-    console.log(chalk.red(`  Flavor Config File Not Found:\n  ${entryFlavor}\n`));
-    process.exit(0);
-  }
   // meta
-  const meta = {
-    flavor: flavor,
-    mode: api.ctx.mode,
-    modeName: api.ctx.modeName,
-    dev: api.ctx.dev,
-    prod: api.ctx.prod,
-  };
-  // config
-  const configDefault = await _loadConfig(entryDefault, api, { quasarConf });
-  const configFlavor = await _loadConfig(entryFlavor, api, { quasarConf });
-  const config = extend(true, { meta }, configDefault, configFlavor);
+  const meta = getEnvMeta(api);
+  configDir = appPaths.resolve.src('front/config/config');
+  const files = getEnvFiles(meta, configDir, 'config', '.ts')!;
+  const target = { meta };
+  for (const file of files) {
+    const config = await _loadConfig(file, api, { quasarConf });
+    if (config) {
+      extend(true, target, config);
+    }
+  }
   // output
-  const contentDest = `export default ${JSON.stringify(config, null, 2)};`;
+  const contentDest = `export default ${JSON.stringify(target, null, 2)};`;
   const fileDest = appPaths.resolve.app('.quasar/cabloy/config.js');
   fse.ensureFileSync(fileDest);
   fse.writeFileSync(fileDest, contentDest, 'utf-8');
   // ok
-  return config;
+  return target;
 }
 
 async function _loadConfig(fileName: string, api, { quasarConf }) {

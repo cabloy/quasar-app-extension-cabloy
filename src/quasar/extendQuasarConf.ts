@@ -1,7 +1,7 @@
 import babel from '@cabloy/vite-plugin-babel';
 import { loadEnvs } from '@cabloy/dotenv';
 import { mergeConfig } from 'vite';
-import { getFlavor } from './getFlavor.js';
+import { getEnvMeta } from './utils.js';
 
 export function extendQuasarConf(conf, api) {
   // boot
@@ -26,13 +26,7 @@ export function extendQuasarConf(conf, api) {
 }
 
 function __loadEnvs(api) {
-  // flavor
-  const flavor = getFlavor();
-  // mode
-  const mode = api.ctx.prod ? 'production' : 'development';
-  // appMode
-  const appMode = api.ctx.modeName;
-  const meta = { flavor, mode, appMode, mine: 'mine' };
+  const meta = getEnvMeta(api);
   const appPaths = api.ctx.appPaths;
   const envDir = appPaths.resolve.app('env');
   const envs = loadEnvs(meta, envDir, '.env');
