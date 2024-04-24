@@ -97,7 +97,7 @@ async function generateModulesMeta(config, api, { quasarConf: _quasarConf }) {
     loadPackage: true,
   });
   // src
-  const fileSrc = new URL('../templates/cabloy-modules-meta.ejs', import.meta.url);
+  const fileSrc = new URL('../../templates/cabloy-modules-meta.ejs', import.meta.url);
   const contentSrc = readFileSync(fileSrc, 'utf8');
   const template = compileTemplate(contentSrc);
   // dest
