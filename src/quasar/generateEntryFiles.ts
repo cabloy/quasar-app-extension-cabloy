@@ -23,8 +23,8 @@ async function generateConfig(api, { quasarConf }) {
   // flavor
   const flavor = getFlavor();
   // entry
-  const entryDefault = appPaths.resolve.src('front/config/config.default.ts');
-  const entryFlavor = appPaths.resolve.src(`front/config/config.${flavor}.ts`);
+  const entryDefault = appPaths.resolve.src('front/config/config/config.ts');
+  const entryFlavor = appPaths.resolve.src(`front/config/config/config.${flavor}.ts`);
   if (!fse.existsSync(entryDefault)) {
     console.log(chalk.red('Please copy directory: from _config to config\n'));
     process.exit(0);
