@@ -15,80 +15,15 @@ import { build as esBuild } from 'esbuild';
 import chalk from 'chalk';
 import { extend } from '@cabloy/extend';
 import { mergeConfig } from 'vite';
-import babel from '@cabloy/vite-plugin-babel';
+
 import { pathToFileURL } from 'node:url';
 import * as Path from 'node:path';
+import { quasar } from './quasar/index.js';
 
 const __SvgIconPattern = /assets\/icons\/groups\/.*?\.svg/;
 
-export default async function (api) {
-  // config
-  api.extendQuasarConf(extendQuasarConf);
-  api.extendViteConf(extendViteConf);
-  // before dev
-  api.beforeDev(async (api, { quasarConf }) => {
-    await generateEntryFiles(api, { quasarConf });
-  });
-  // before build
-  api.beforeBuild(async (api, { quasarConf }) => {
-    await generateEntryFiles(api, { quasarConf });
-  });
-}
-
-function extendQuasarConf(conf, _api) {
-  const vitePlugins = [
-    [
-      (<any>babel)({
-        filter: /\.ts$/,
-        babelConfig: {
-          babelrc: false,
-          configFile: false,
-          plugins: [
-            ['babel-plugin-cabloy-front-bean-module'],
-            ['babel-plugin-transform-typescript-metadata'],
-            ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
-            ['@babel/plugin-transform-class-properties', { loose: true }],
-            ['@babel/plugin-transform-typescript'],
-          ],
-        },
-      }),
-    ],
-    [
-      '@vitejs/plugin-vue-jsx',
-      {
-        include: /\.[jt]sx$/,
-        babelPlugins: [
-          ['babel-plugin-cabloy-front-bean-module'],
-          ['babel-plugin-transform-typescript-metadata'],
-          ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
-          ['@babel/plugin-transform-class-properties', { loose: true }],
-        ],
-      },
-    ],
-    [
-      'vite-plugin-checker',
-      {
-        vueTsc: {
-          tsconfigPath: 'tsconfig.vue-tsc.json',
-        },
-        eslint: {
-          lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
-        },
-      },
-      { server: false },
-    ],
-  ];
-  // boot
-  conf.boot.unshift('cabloy');
-  // build: alias
-  conf.build = mergeConfig(conf.build as unknown as any, {
-    alias: {
-      '@vue/runtime-core': '@cabloy/vue-runtime-core',
-    },
-  });
-  // build: vitePlugins
-  conf.build.vitePlugins = (conf.build.vitePlugins || []).concat(vitePlugins);
-}
+// quasar
+export default quasar;
 
 function extendViteConf(conf, _api) {
   conf.build = mergeConfig(conf.build as unknown as any, {
