@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import fse from 'fs-extra';
 import compileTemplate from 'lodash/template.js';
 import { glob } from '@cabloy/module-glob';
-import parseArgs from 'minimist';
 import tmp from 'tmp';
 import { build as esBuild } from 'esbuild';
 import chalk from 'chalk';
@@ -10,6 +9,7 @@ import { extend } from '@cabloy/extend';
 
 import { pathToFileURL } from 'node:url';
 import * as Path from 'node:path';
+import { getFlavor } from './getFlavor.js';
 
 export async function generateEntryFiles(api, { quasarConf }) {
   // config
@@ -21,8 +21,7 @@ export async function generateEntryFiles(api, { quasarConf }) {
 async function generateConfig(api, { quasarConf }) {
   const appPaths = api.ctx.appPaths;
   // flavor
-  const argv = parseArgs(process.argv.slice(2));
-  const flavor = argv.flavor || 'web';
+  const flavor = getFlavor();
   // entry
   const entryDefault = appPaths.resolve.src('front/config/config.default.ts');
   const entryFlavor = appPaths.resolve.src(`front/config/config.${flavor}.ts`);
