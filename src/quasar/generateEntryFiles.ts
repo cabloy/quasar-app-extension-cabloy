@@ -14,12 +14,12 @@ import { getEnvFiles } from '@cabloy/dotenv';
 
 export async function generateEntryFiles(api, { quasarConf }) {
   // config
-  const config = await generateConfig(api, { quasarConf });
+  const config = await generateConfig(api);
   // modules meta
   await generateModulesMeta(config, api, { quasarConf });
 }
 
-async function generateConfig(api, { quasarConf }) {
+async function generateConfig(api) {
   const appPaths = api.ctx.appPaths;
   // check config
   let configDir = appPaths.resolve.src('front/config');
@@ -31,9 +31,11 @@ async function generateConfig(api, { quasarConf }) {
   const meta = getEnvMeta(api);
   configDir = appPaths.resolve.src('front/config/config');
   const files = getEnvFiles(meta, configDir, 'config', '.ts')!;
-  const target = { meta };
+  const targetMeta: any = { ...meta };
+  delete targetMeta.mine;
+  const target = { meta: targetMeta };
   for (const file of files) {
-    const config = await _loadConfig(file, api, { quasarConf });
+    const config = await _loadConfig(file, targetMeta, api);
     if (config) {
       extend(true, target, config);
     }
@@ -47,7 +49,7 @@ async function generateConfig(api, { quasarConf }) {
   return target;
 }
 
-async function _loadConfig(fileName: string, api, { quasarConf }) {
+async function _loadConfig(fileName: string, meta, api) {
   // temp
   const fileTempObj = tmp.fileSync({ postfix: '.mjs' });
   const fileTemp = fileTempObj.name;
@@ -57,7 +59,7 @@ async function _loadConfig(fileName: string, api, { quasarConf }) {
   // load
   const fnResult = await import(_pathToHref(fileTemp));
   const configFn = fnResult.default || fnResult;
-  const config = await configFn(api.ctx, { quasarConf });
+  const config = await configFn(meta);
   // delete temp
   fileTempObj.removeCallback();
   // ok
