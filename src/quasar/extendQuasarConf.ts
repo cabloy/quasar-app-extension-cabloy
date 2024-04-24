@@ -6,15 +6,20 @@ import { getFlavor } from './getFlavor.js';
 export function extendQuasarConf(conf, api) {
   // boot
   conf.boot.unshift('cabloy');
-  // load envs
-  const envs = __loadEnvs(api);
-  console.log(envs);
+  // env
+  const env = __loadEnvs(api);
   // build: alias
   conf.build = mergeConfig(conf.build as unknown as any, {
     alias: {
       '@vue/runtime-core': '@cabloy/vue-runtime-core',
     },
+    env,
   });
+  // build: vueRouterMode/vueRouterBase
+  if (env) {
+    conf.build.vueRouterMode = env.VUE_ROUTER_MODE;
+    conf.build.vueRouterBase = env.VUE_ROUTER_BASE;
+  }
   // build: vitePlugins
   const vitePlugins = generateVitePlugins();
   conf.build.vitePlugins = (conf.build.vitePlugins || []).concat(vitePlugins);
@@ -29,7 +34,7 @@ function __loadEnvs(api) {
   const appMode = api.ctx.modeName;
   const meta = { flavor, mode, appMode, mine: 'mine' };
   const appPaths = api.ctx.appPaths;
-  const envDir = appPaths.resolve.src('env');
+  const envDir = appPaths.resolve.app('env');
   const envs = loadEnvs(meta, envDir, '.env');
   return envs;
 }
