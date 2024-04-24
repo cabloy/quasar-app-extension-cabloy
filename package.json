@@ -23,11 +23,12 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "devDependencies": {
-    "@cabloy/lint": "^4.0.4"
+    "@cabloy/lint": "^4.0.5"
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.24.1",
     "@babel/plugin-transform-class-properties": "^7.24.1",
+    "@cabloy/dotenv": "^1.0.0",
     "@cabloy/extend": "^3.0.5",
     "@cabloy/module-glob": "^5.0.4",
     "@cabloy/vite-plugin-babel": "^1.1.3",
