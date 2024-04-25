@@ -30,11 +30,17 @@ function __loadEnvs(api) {
   const appPaths = api.ctx.appPaths;
   const envDir = appPaths.resolve.app('env');
   const envs = loadEnvs(meta, envDir, '.env');
-  return Object.assign({}, envs, {
-    META_FLAVOR: meta.flavor,
-    META_MODE: meta.mode,
-    META_APP_MODE: meta.appMode,
-  });
+  return Object.assign(
+    {
+      NODE_ENV: meta.mode,
+    },
+    envs,
+    {
+      META_FLAVOR: meta.flavor,
+      META_MODE: meta.mode,
+      META_APP_MODE: meta.appMode,
+    },
+  );
 }
 
 function generateVitePlugins() {
