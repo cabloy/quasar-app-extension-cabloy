@@ -2,6 +2,7 @@ import babel from '@cabloy/vite-plugin-babel';
 import { loadEnvs } from '@cabloy/dotenv';
 import { mergeConfig } from 'vite';
 import { getEnvMeta } from './utils.js';
+import { viteMockServe } from 'vite-plugin-mock';
 
 export function extendQuasarConf(conf, api) {
   // boot
@@ -21,7 +22,7 @@ export function extendQuasarConf(conf, api) {
   conf.build.vueRouterMode = env.APP_ROUTER_MODE;
   conf.build.vueRouterBase = env.APP_ROUTER_BASE;
   // build: vitePlugins
-  const vitePlugins = generateVitePlugins();
+  const vitePlugins = generateVitePlugins(api);
   conf.build.vitePlugins = (conf.build.vitePlugins || []).concat(vitePlugins);
 }
 
@@ -43,48 +44,65 @@ function __loadEnvs(api) {
   );
 }
 
-function generateVitePlugins() {
-  const vitePlugins = [
-    [
-      (<any>babel)({
-        filter: /\.ts$/,
-        babelConfig: {
-          babelrc: false,
-          configFile: false,
-          plugins: [
-            ['babel-plugin-cabloy-front-bean-module'],
-            ['babel-plugin-transform-typescript-metadata'],
-            ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
-            ['@babel/plugin-transform-class-properties', { loose: true }],
-            ['@babel/plugin-transform-typescript'],
-          ],
-        },
-      }),
-    ],
-    [
-      '@vitejs/plugin-vue-jsx',
-      {
-        include: /\.[jt]sx$/,
-        babelPlugins: [
-          ['babel-plugin-cabloy-front-bean-module'],
-          ['babel-plugin-transform-typescript-metadata'],
-          ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
-          ['@babel/plugin-transform-class-properties', { loose: true }],
-        ],
-      },
-    ],
-    [
-      'vite-plugin-checker',
-      {
-        vueTsc: {
-          tsconfigPath: 'tsconfig.vue-tsc.json',
-        },
-        eslint: {
-          lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
-        },
-      },
-      { server: false },
-    ],
+function _getVitePluginTs() {
+  return (<any>babel)({
+    filter: /\.ts$/,
+    babelConfig: {
+      babelrc: false,
+      configFile: false,
+      plugins: [
+        ['babel-plugin-cabloy-front-bean-module'],
+        ['babel-plugin-transform-typescript-metadata'],
+        ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
+        ['@babel/plugin-transform-class-properties', { loose: true }],
+        ['@babel/plugin-transform-typescript'],
+      ],
+    },
+  });
+}
+
+function _getVitePluginTsx() {
+  return [
+    '@vitejs/plugin-vue-jsx',
+    {
+      include: /\.[jt]sx$/,
+      babelPlugins: [
+        ['babel-plugin-cabloy-front-bean-module'],
+        ['babel-plugin-transform-typescript-metadata'],
+        ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
+        ['@babel/plugin-transform-class-properties', { loose: true }],
+      ],
+    },
   ];
+}
+
+function _getVitePluginMock(api) {
+  return viteMockServe({
+    mockPath,
+    ignore: /^_/,
+  });
+}
+
+function _getVitePluginChecker() {
+  return [
+    'vite-plugin-checker',
+    {
+      vueTsc: {
+        tsconfigPath: 'tsconfig.vue-tsc.json',
+      },
+      eslint: {
+        lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
+      },
+    },
+    { server: false },
+  ];
+}
+
+function generateVitePlugins(api) {
+  const vitePlugins: any[] = [];
+  vitePlugins.push(_getVitePluginTs());
+  vitePlugins.push(_getVitePluginTsx());
+  vitePlugins.push(_getVitePluginMock(api));
+  vitePlugins.push(_getVitePluginChecker());
   return vitePlugins;
 }
