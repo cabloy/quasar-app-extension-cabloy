@@ -94,8 +94,8 @@ async function generateModulesMeta(config, api, { quasarConf: _quasarConf }) {
   const appPaths = api.ctx.appPaths;
   // modules
   const { modules } = await glob({
-    projectPath: appPaths.appDir,
     projectMode: 'front',
+    projectPath: appPaths.appDir,
     disabledModules: config.base.disabledModules,
     disabledSuites: config.base.disabledSuites,
     log: true,
