@@ -36,7 +36,7 @@ async function generateConfig(api) {
   const target = {
     meta: targetMeta,
     env: {
-      appServer: Boolean(process.env.APP_SERVER),
+      appServer: process.env.APP_SERVER === 'true',
       appRouterMode: process.env.APP_ROUTER_MODE,
       appRouterBase: process.env.APP_ROUTER_BASE,
       appPublicPath: process.env.APP_PUBLIC_PATH,
