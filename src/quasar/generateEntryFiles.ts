@@ -33,7 +33,18 @@ async function generateConfig(api) {
   const files = getEnvFiles(meta, configDir, 'config', '.ts')!;
   const targetMeta: any = { ...meta };
   delete targetMeta.mine;
-  const target = { meta: targetMeta };
+  const target = {
+    meta: targetMeta,
+    env: {
+      appServer: Boolean(process.env.APP_SERVER),
+      appRouterMode: process.env.APP_ROUTER_MODE,
+      appRouterBase: process.env.APP_ROUTER_BASE,
+      appPublicPath: process.env.APP_PUBLIC_PATH,
+      appName: process.env.APP_NAME,
+      appTitle: process.env.APP_TITLE,
+      appVersion: process.env.APP_VERSION,
+    },
+  };
   for (const file of files) {
     const config = await _loadConfig(file, targetMeta, api);
     if (config) {
