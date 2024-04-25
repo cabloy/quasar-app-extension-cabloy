@@ -77,9 +77,15 @@ function _getVitePluginTsx() {
 }
 
 function _getVitePluginMock(api) {
+  const appPaths = api.ctx.appPaths;
+  const mockPath = appPaths.resolve.app(process.env.MOCK_PATH);
+  const configPath = appPaths.resolve.app(process.env.MOCK_CONFIG_PATH || 'vite.mock.config.ts');
   return viteMockServe({
     mockPath,
     ignore: /^_/,
+    watchFiles: true,
+    enable: true,
+    configPath,
   });
 }
 
@@ -102,7 +108,9 @@ function generateVitePlugins(api) {
   const vitePlugins: any[] = [];
   vitePlugins.push(_getVitePluginTs());
   vitePlugins.push(_getVitePluginTsx());
-  vitePlugins.push(_getVitePluginMock(api));
+  if (process.env.MOCK_ENABLED === 'true') {
+    vitePlugins.push(_getVitePluginMock(api));
+  }
   vitePlugins.push(_getVitePluginChecker());
   return vitePlugins;
 }
