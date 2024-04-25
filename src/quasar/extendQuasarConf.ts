@@ -2,7 +2,7 @@ import babel from '@cabloy/vite-plugin-babel';
 import { loadEnvs } from '@cabloy/dotenv';
 import { mergeConfig } from 'vite';
 import { getEnvMeta } from './utils.js';
-import { viteMockServe } from 'vite-plugin-mock';
+import { vitePluginFakeServer } from 'vite-plugin-fake-server';
 
 export function extendQuasarConf(conf, api) {
   // boot
@@ -78,16 +78,18 @@ function _getVitePluginTsx() {
 
 function _getVitePluginMock(api) {
   const appPaths = api.ctx.appPaths;
-  const mockPath = appPaths.resolve.app(process.env.MOCK_PATH);
-  const configPath = appPaths.resolve.app(process.env.MOCK_CONFIG_PATH || 'vite.mock.config.ts');
+  const include = appPaths.resolve.app(process.env.MOCK_PATH);
   const logger = process.env.MOCK_LOGGER === 'true';
-  return viteMockServe({
-    mockPath,
-    ignore: /^_/,
-    watchFiles: true,
-    enable: true,
-    configPath,
+  const basename = process.env.MOCK_BASE_NAME || '';
+  return vitePluginFakeServer({
+    include,
+    exclude: ['_*'],
+    infixName: 'fake',
+    watch: true,
     logger,
+    basename,
+    enableDev: true,
+    enableProd: true,
   });
 }
 
