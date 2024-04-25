@@ -80,12 +80,14 @@ function _getVitePluginMock(api) {
   const appPaths = api.ctx.appPaths;
   const mockPath = appPaths.resolve.app(process.env.MOCK_PATH);
   const configPath = appPaths.resolve.app(process.env.MOCK_CONFIG_PATH || 'vite.mock.config.ts');
+  const logger = process.env.MOCK_LOGGER === 'true';
   return viteMockServe({
     mockPath,
     ignore: /^_/,
     watchFiles: true,
     enable: true,
     configPath,
+    logger,
   });
 }
 
