@@ -15,10 +15,13 @@ export function extendQuasarConf(conf, api) {
     },
     env,
   });
-  // build: vueRouterMode/vueRouterBase
+  // build
   if (env) {
-    conf.build.vueRouterMode = env.VUE_ROUTER_MODE;
-    conf.build.vueRouterBase = env.VUE_ROUTER_BASE;
+    // publicPath
+    conf.build.publicPath = env.APP_PUBLIC_PATH;
+    // vueRouterMode/vueRouterBase
+    conf.build.vueRouterMode = env.APP_ROUTER_MODE;
+    conf.build.vueRouterBase = env.APP_ROUTER_BASE;
   }
   // build: vitePlugins
   const vitePlugins = generateVitePlugins();
