@@ -6,7 +6,6 @@ import tmp from 'tmp';
 import { build as esBuild } from 'esbuild';
 import chalk from 'chalk';
 import { extend } from '@cabloy/extend';
-
 import { pathToFileURL } from 'node:url';
 import * as Path from 'node:path';
 import { getEnvMeta } from './utils.js';
