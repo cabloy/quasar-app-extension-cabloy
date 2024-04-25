@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-cabloy",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Quasar ext of cabloy",
   "author": "zhennann",
   "type": "module",
@@ -30,7 +30,7 @@
     "@babel/plugin-transform-class-properties": "^7.24.1",
     "@cabloy/dotenv": "^1.0.1",
     "@cabloy/extend": "^3.0.5",
-    "@cabloy/module-glob": "^5.0.4",
+    "@cabloy/module-glob": "^5.0.5",
     "@cabloy/vite-plugin-babel": "^1.1.3",
     "@types/node": "^20.12.7",
     "babel-plugin-cabloy-front-bean-module": "^1.0.1",
