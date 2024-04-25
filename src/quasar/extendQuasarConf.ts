@@ -15,14 +15,11 @@ export function extendQuasarConf(conf, api) {
     },
     env,
   });
-  // build
-  if (env) {
-    // publicPath
-    conf.build.publicPath = env.APP_PUBLIC_PATH;
-    // vueRouterMode/vueRouterBase
-    conf.build.vueRouterMode = env.APP_ROUTER_MODE;
-    conf.build.vueRouterBase = env.APP_ROUTER_BASE;
-  }
+  // build: publicPath
+  conf.build.publicPath = env.APP_PUBLIC_PATH;
+  // build: vueRouterMode/vueRouterBase
+  conf.build.vueRouterMode = env.APP_ROUTER_MODE;
+  conf.build.vueRouterBase = env.APP_ROUTER_BASE;
   // build: vitePlugins
   const vitePlugins = generateVitePlugins();
   conf.build.vitePlugins = (conf.build.vitePlugins || []).concat(vitePlugins);
@@ -33,7 +30,11 @@ function __loadEnvs(api) {
   const appPaths = api.ctx.appPaths;
   const envDir = appPaths.resolve.app('env');
   const envs = loadEnvs(meta, envDir, '.env');
-  return envs;
+  return Object.assign({}, envs, {
+    META_FLAVOR: meta.flavor,
+    META_MODE: meta.mode,
+    META_APP_MODE: meta.appMode,
+  });
 }
 
 function generateVitePlugins() {
