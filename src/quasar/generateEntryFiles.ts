@@ -95,11 +95,10 @@ async function generateModulesMeta(config, api, { quasarConf: _quasarConf }) {
   // modules
   const { modules } = await glob({
     projectPath: appPaths.appDir,
+    projectMode: 'front',
     disabledModules: config.base.disabledModules,
     disabledSuites: config.base.disabledSuites,
     log: true,
-    projectMode: 'front',
-    loadPackage: true,
   });
   // src
   const fileSrc = new URL('../../templates/cabloy-modules-meta.ejs', import.meta.url);
