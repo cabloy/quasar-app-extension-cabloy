@@ -87,6 +87,7 @@ function _getVitePluginMock(_api) {
           outDir: process.env.MOCK_BUILD_OUTPUT || 'distMockServer',
         }
       : false;
+  //const cors = process.env.MOCK_BUILD_CORS === 'true';
   return vitePluginFakeServer({
     include,
     exclude: ['_*'],
@@ -97,6 +98,7 @@ function _getVitePluginMock(_api) {
     enableDev: true,
     enableProd: true,
     build,
+    //cors,
   });
 }
 
