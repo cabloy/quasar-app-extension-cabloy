@@ -92,19 +92,20 @@ function _createEsbuildConfig(fileSrc: string, fileDest: string, api) {
 async function generateModulesMeta(config, api, { quasarConf: _quasarConf }) {
   const appPaths = api.ctx.appPaths;
   // modules
-  const { modules } = await glob({
+  const { modules, modulesArray } = await glob({
     projectMode: 'front',
     projectPath: appPaths.appDir,
     disabledModules: config.base.disabledModules,
     disabledSuites: config.base.disabledSuites,
     log: true,
   });
+  const moduleNames = modulesArray.map(item => item.info.relativeName);
   // src
   const fileSrc = new URL('../../templates/cabloy-modules-meta.ejs', import.meta.url);
   const contentSrc = readFileSync(fileSrc, 'utf8');
   const template = compileTemplate(contentSrc);
   // dest
-  const contentDest = template({ modules });
+  const contentDest = template({ modules, moduleNames });
   const fileDest = appPaths.resolve.app('.quasar/cabloy/modules-meta.js');
   fse.ensureFileSync(fileDest);
   fse.writeFileSync(fileDest, contentDest, 'utf-8');
