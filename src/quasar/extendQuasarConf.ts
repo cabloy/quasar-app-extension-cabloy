@@ -80,6 +80,13 @@ function _getVitePluginMock(_api) {
   const include = process.env.MOCK_PATH;
   const logger = process.env.MOCK_LOGGER === 'true';
   const basename = process.env.MOCK_BASE_NAME || '';
+  const build =
+    process.env.MOCK_BUILD === 'true'
+      ? {
+          port: Number(process.env.MOCK_BUILD_PORT || 8888),
+          outDir: process.env.MOCK_BUILD_OUTPUT || 'distMockServer',
+        }
+      : false;
   return vitePluginFakeServer({
     include,
     exclude: ['_*'],
@@ -89,6 +96,7 @@ function _getVitePluginMock(_api) {
     basename,
     enableDev: true,
     enableProd: true,
+    build,
   });
 }
 
