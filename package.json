@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-cabloy",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Quasar ext of cabloy",
   "author": "zhennann",
   "type": "module",
@@ -32,6 +32,7 @@
     "@cabloy/extend": "^3.0.5",
     "@cabloy/module-glob": "^5.0.8",
     "@cabloy/vite-plugin-babel": "^1.1.3",
+    "@cabloy/vue-runtime-core": "^3.4.27",
     "@faker-js/faker": "^8.4.1",
     "@types/node": "^20.12.7",
     "@zhennann/vite-plugin-fake-server": "^2.1.1",
