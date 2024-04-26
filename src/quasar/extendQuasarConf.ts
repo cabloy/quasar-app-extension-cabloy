@@ -76,9 +76,8 @@ function _getVitePluginTsx() {
   ];
 }
 
-function _getVitePluginMock(api) {
-  const appPaths = api.ctx.appPaths;
-  const include = appPaths.resolve.app(process.env.MOCK_PATH);
+function _getVitePluginMock(_api) {
+  const include = process.env.MOCK_PATH;
   const logger = process.env.MOCK_LOGGER === 'true';
   const basename = process.env.MOCK_BASE_NAME || '';
   return vitePluginFakeServer({
