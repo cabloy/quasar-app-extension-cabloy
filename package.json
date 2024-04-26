@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-cabloy",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "Quasar ext of cabloy",
   "author": "zhennann",
   "type": "module",
@@ -34,6 +34,7 @@
     "@cabloy/vite-plugin-babel": "^1.1.3",
     "@faker-js/faker": "^8.4.1",
     "@types/node": "^20.12.7",
+    "@zhennann/vite-plugin-fake-server": "^2.1.1",
     "babel-plugin-cabloy-front-bean-module": "^1.0.1",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "chalk": "^3.0.0",
@@ -43,7 +44,6 @@
     "minimist": "^1.2.8",
     "tmp": "^0.2.3",
     "vite": "^5.2.10",
-    "vite-plugin-checker": "^0.6.4",
-    "vite-plugin-fake-server": "^2.1.1"
+    "vite-plugin-checker": "^0.6.4"
   }
 }

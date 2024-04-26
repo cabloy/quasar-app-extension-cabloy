@@ -2,7 +2,7 @@ import babel from '@cabloy/vite-plugin-babel';
 import { loadEnvs } from '@cabloy/dotenv';
 import { mergeConfig } from 'vite';
 import { getEnvMeta } from './utils.js';
-import { vitePluginFakeServer } from 'vite-plugin-fake-server';
+import { vitePluginFakeServer } from '@zhennann/vite-plugin-fake-server';
 
 export function extendQuasarConf(conf, api) {
   // boot
@@ -87,7 +87,7 @@ function _getVitePluginMock(_api) {
           outDir: process.env.MOCK_BUILD_OUTPUT || 'distMockServer',
         }
       : false;
-  //const cors = process.env.MOCK_BUILD_CORS === 'true';
+  const cors = process.env.MOCK_BUILD_CORS === 'true';
   return vitePluginFakeServer({
     include,
     exclude: ['_*'],
@@ -98,7 +98,7 @@ function _getVitePluginMock(_api) {
     enableDev: !build,
     enableProd: !build,
     build,
-    //cors,
+    cors,
   });
 }
 
