@@ -24,6 +24,15 @@ export function extendQuasarConf(conf, api) {
   // build: vitePlugins
   const vitePlugins = generateVitePlugins(api);
   conf.build.vitePlugins = (conf.build.vitePlugins || []).concat(vitePlugins);
+  // devServer
+  const proxy = {};
+  if (process.env.PROXY_API_ENABLED === 'true') {
+    proxy[process.env.PROXY_API_PREFIX!] = {
+      target: process.env.PROXY_API_BASE_URL,
+      changeOrigin: true,
+    };
+  }
+  conf.devServer = mergeConfig(conf.devServer, { proxy });
 }
 
 function __loadEnvs(api) {
