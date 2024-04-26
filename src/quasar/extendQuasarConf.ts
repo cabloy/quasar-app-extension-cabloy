@@ -95,8 +95,8 @@ function _getVitePluginMock(_api) {
     watch: true,
     logger,
     basename,
-    enableDev: true,
-    enableProd: true,
+    enableDev: !build,
+    enableProd: !build,
     build,
     //cors,
   });
