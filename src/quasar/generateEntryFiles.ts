@@ -13,9 +13,9 @@ import { getEnvFiles } from '@cabloy/dotenv';
 
 export async function generateEntryFiles(api, { quasarConf }) {
   // config
-  const config = await generateConfig(api);
+  await generateConfig(api);
   // modules meta
-  await generateModulesMeta(config, api, { quasarConf });
+  await generateModulesMeta(api, { quasarConf });
 }
 
 async function generateConfig(api) {
@@ -89,14 +89,14 @@ function _createEsbuildConfig(fileSrc: string, fileDest: string, api) {
   };
 }
 
-async function generateModulesMeta(config, api, { quasarConf: _quasarConf }) {
+async function generateModulesMeta(api, { quasarConf: _quasarConf }) {
   const appPaths = api.ctx.appPaths;
   // modules
   const { modules, modulesArray } = await glob({
     projectMode: 'front',
     projectPath: appPaths.appDir,
-    disabledModules: config.base.disabledModules,
-    disabledSuites: config.base.disabledSuites,
+    disabledModules: process.env.PROJECT_DISABLED_MODULES,
+    disabledSuites: process.env.PROJECT_DISABLED_SUITES,
     log: true,
   });
   const moduleNames = modulesArray.map(item => item.info.relativeName);
