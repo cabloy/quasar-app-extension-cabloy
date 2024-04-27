@@ -9,6 +9,19 @@ const __ModuleLibs = [
   /node_modules\/cabloy-module-front-([^\/]*?)\//,
 ];
 
+const __CabloyManualChunkVendors = [
+  { match: ['@faker-js'], output: 'faker' },
+  {
+    match: [/cabloy\/config\.js/],
+    output: '-cabloy-config',
+  },
+  {
+    match: ['vue', '@vue', 'reflect-metadata', '@cabloy', 'packages-cabloy/core'],
+    output: 'cabloy',
+  },
+  { match: ['vue-router'], output: 'vue-router' },
+];
+
 export function extendViteConf(conf, _api) {
   conf.build = mergeConfig(conf.build as unknown as any, {
     rollupOptions: {
@@ -42,7 +55,12 @@ const configManualChunk = (conf, id: string) => {
 };
 
 function _configManualChunk_vendors(conf, id: string) {
-  const matchItem = conf.cabloyManualChunk.vendors.find(item => {
+  let vendors = conf.__cabloyManualChunkVendors_runtime;
+  if (!vendors) {
+    vendors = conf.__cabloyManualChunkVendors_runtime =
+      conf.cabloyManualChunk.vendors.concat(__CabloyManualChunkVendors);
+  }
+  const matchItem = vendors.find(item => {
     return item.match.some(item => {
       if (typeof item === 'string') {
         return id.indexOf(`/${item}/`) > -1;
