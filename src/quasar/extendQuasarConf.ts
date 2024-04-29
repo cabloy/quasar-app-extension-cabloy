@@ -36,7 +36,7 @@ export function extendQuasarConf(context: ConfigContext) {
     conf.build.vueRouterBase = cabloyViteMeta.env.APP_ROUTER_BASE;
     // build: vitePlugins
     const vitePlugins = cabloyViteMeta.vitePlugins.map(item => {
-      return [item[0], item[1], item[2]];
+      return [item[1], item[2], item[3]];
     });
     conf.build.vitePlugins = (conf.build.vitePlugins || []).concat(vitePlugins);
     // devServer
