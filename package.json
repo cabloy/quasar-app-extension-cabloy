@@ -26,7 +26,7 @@
     "@cabloy/lint": "^4.0.6"
   },
   "dependencies": {
-    "@cabloy/app-vite": "^1.0.1",
+    "@cabloy/app-vite": "^1.0.2",
     "@cabloy/front-core": "^5.0.7",
     "vite": "^5.2.10"
   }
