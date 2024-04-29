@@ -7,11 +7,14 @@
 
 import { extendQuasarConf } from './extendQuasarConf.js';
 import { extendViteConf } from './extendViteConf.js';
+import { ConfigContext } from './types.js';
 
 export async function quasar(api) {
+  // context
+  const context: ConfigContext = { cabloyViteMeta: undefined };
   // config
-  api.extendQuasarConf(extendQuasarConf);
-  api.extendViteConf(extendViteConf);
+  api.extendQuasarConf(extendQuasarConf(context));
+  api.extendViteConf(extendViteConf(context));
   // before dev
   api.beforeDev(async (_api, { quasarConf: _quasarConf }) => {});
   // before build
